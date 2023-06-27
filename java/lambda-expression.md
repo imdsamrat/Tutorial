@@ -293,3 +293,118 @@ class Main {
 ```
 
 # Comparator Functional Interface
+
+```java
+class Main {
+  public static void main(String[] args) {
+    List<Integer> list = new ArrayList<>();
+    list.add(2);
+    list.add(4);
+    list.add(77);
+    list.add(45);
+    list.add(23);
+    list.add(298);
+    Collections.sort(list)
+    System.out.println(list);
+  }
+}
+```
+
+> [ 2, 4, 23, 45, 77, 298 ]
+
+By default it sorts in ascending order.
+
+For descending order or custom sorting, we need to provide another argument `comparator` implementation.
+
+```java
+class Main {
+  public static void main(String[] args) {
+    List<Integer> list = new ArrayList<>();
+    list.add(2);
+    list.add(4);
+    list.add(77);
+    list.add(45);
+    list.add(23);
+    list.add(298);
+    Collections.sort(list, (a, b) -> b - a)
+    System.out.println(list);
+  }
+}
+```
+
+> [ 298, 77, 45, 23, 4, 2 ]
+
+```java
+class Main {
+  public static void main(String[] args) {
+    Set<Integer> set = new TreeSet<>();
+    set.add(22);
+    set.add(1);
+    set.add(13);
+    System.out.println("Before custom sorting: " + set);
+    Set<Integer> newSet = new TreeSet<>((a, b) -> b - a);
+    newSet.add(22);
+    newSet.add(1);
+    newSet.add(13);
+    System.out.println("After custom sorting: " + newSet);
+  }
+}
+```
+
+> Before custom sorting: [1, 13, 22]
+
+> After custom sorting: [22, 13, 1]
+
+```java
+class Main {
+  public static void main(String[] args) {
+    Map<Integer, String> map = new TreeMap<>();
+    map.put(2, "z");
+    map.put(3, "f");
+    map.put(1, "y");
+    System.out.println("Before custom sorting: " + map);
+    Map<Integer, String> newMap = new TreeMap<>((a, b) -> b - a);
+    newMap.put(2, "z");
+    newMap.put(3, "f");
+    newMap.put(1, "y");
+    System.out.println("Before custom sorting: " + newMap);
+  }
+}
+```
+
+> Before custom sorting: {1=y, 2=z, 3=f}
+
+> After custom sorting: {3=f, 2=z, 1=y}
+
+```java
+static class Student {
+  public Integer id;
+  public String name;
+
+  public Student(Integer id, String name) {
+    this.id = id;
+    this.name = name;
+  }
+
+  public String toString() {
+    return this.id + ": " + this.name;
+  }
+}
+
+class Main {
+  public static void main(String[] args) {
+    Student s1 = new Student(2, "sam");
+    Student s2 = new Student(3, "raj");
+    Student s3 = new Student(34, "ram");
+    List<Student> list = new ArrayList<Student>();
+    list.add(s1);
+    list.add(s2);
+    list.add(s3);
+    Collections.sort(list); // will throw error, need to provide comparator as here is list of Student class objects.
+    Collections.sort(list, (a, b) -> b.id - a.id);
+    System.out.println(list);
+  }
+}
+```
+
+> [34: ram, 3: raj, 2: sam]
