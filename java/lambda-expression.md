@@ -408,3 +408,242 @@ class Main {
 ```
 
 > [34: ram, 3: raj, 2: sam]
+
+# Anonymous Inner Class similarity with Lambda Expression
+
+```java
+interface Employee {
+  public String getSalary();
+  public String getDesignation();
+}
+
+class SoftwareEngineer implements Employee {
+
+  @Override
+  public String getSalary() {
+    return "10";
+  }
+
+  @Override
+  public String getDesignation() {
+    return "Software Engineer";
+  }
+}
+
+
+class Main {
+  public static void main(String[] args) {
+    Employee employee =  new SoftwareEngineer();
+    System.out.println(employee.getSalary());
+  }
+}
+```
+
+> 10
+
+Using anonymous inner class
+
+```java
+interface Employee {
+  public String getSalary();
+  public String getDesignation();
+}
+
+class Main {
+  public static void main(String[] args) {
+    Employee employee =  new Employee() {
+      @Override
+      public String getSalary() {
+        return "10";
+      }
+
+      @Override
+      public String getDesignation() {
+        return "Software Engineer";
+      }
+    };
+    System.out.println(employee.getSalary());
+  }
+}
+```
+
+> 10
+
+Note: Here, we are not instanciating the interface as an interface can't be instanciated. We are creating object using anonymous inner class which contains implementation of the interface.
+
+# Variables in Lambda Expression
+
+```java
+interface Employee {
+  public String getSalary();
+}
+
+class Main {
+  public static void main(String[] args) {
+    doSomething();
+  }
+
+  public void doSomething() {
+    int x = 2 // local variable
+    Employee employee = () -> {
+      x = 3 //  will give an error, variable used in lambda expression should be final or effectively final.
+      return "100";
+    }
+  }
+}
+```
+
+```java
+interface Employee {
+  public String getSalary();
+}
+
+class Main {
+  int x = 2 // instance variable
+  public static void main(String[] args) {
+    doSomething();
+  }
+
+  public void doSomething() {
+
+    Employee employee = () -> {
+      x = 3 //  won't give any error.
+      return "100";
+    }
+  }
+}
+```
+
+```java
+interface Employee {
+  public String getSalary();
+}
+
+class Main {
+  int x = 2 // instance variable
+  public static void main(String[] args) {
+    doSomething();
+  }
+
+  public void doSomething() {
+
+    Employee employee = () -> {
+      int x = 3 //  local variable
+      return "100";
+    }
+  }
+}
+```
+
+```java
+interface Employee {
+  public String getSalary();
+}
+
+class Main {
+  int x = 2 // instance variable
+  public static void main(String[] args) {
+    doSomething();
+  }
+
+  public void doSomething() {
+    int x = 3 //  local variable
+    Employee employee = () -> {
+      return "100";
+    }
+  }
+}
+```
+
+Using anonymous inner class
+
+```java
+interface Employee {
+  public String getSalary();
+}
+
+class Main {
+  int x = 2 // instance variable
+  public static void main(String[] args) {
+    doSomething();
+  }
+
+  public void doSomething() {
+    int x = 3; //  local variable to doSomething() method
+
+    Employee employee = () -> {
+      int x = 10; // local variable to implementation of getSalary() method
+      return "100";
+    }
+
+    Employee employee = new Employee() {
+      int x = 2; // instance variable of anonymous inner class
+      @Override
+      public String getSalary() {
+        return "100";
+      }
+    }
+  }
+}
+```
+
+```java
+interface Employee {
+  public String getSalary();
+}
+
+class Main {
+  int x = 2; // instance variable
+  public static void main(String[] args) {
+    doSomething();
+  }
+
+  public void doSomething() {
+    int x = 3; //  local variable to doSomething() method
+
+    Employee employee = () -> {
+      System.out.println(this.x); // success
+      return "100";
+    }
+
+    Employee employee = new Employee() {
+      int x = 2; // instance variable of anonymous inner class
+      @Override
+      public String getSalary() {
+        System.out.println(this.x); // success
+        return "100";
+      }
+    }
+  }
+}
+```
+
+```java
+interface Employee {
+  public String getSalary();
+}
+
+class Main {
+  int x = 2; // instance variable
+  public static void main(String[] args) {
+    doSomething();
+  }
+
+  public void doSomething() {
+    int x = 3; //  local variable to doSomething() method
+
+    Employee employee = () -> {
+      System.out.println(this.x); // success
+      return "100";
+    }
+
+    Employee employee = new Employee() {
+      @Override
+      public String getSalary() {
+        System.out.println(this.x); // error there is no instace variable named x in anonymous inner class
+        return "100";
+      }
+    }
+  }
+}
+```
