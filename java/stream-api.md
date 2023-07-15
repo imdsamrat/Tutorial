@@ -341,3 +341,26 @@ public class Test {
 ```
 
 [ 37, 28, 22, 17 ]
+
+# Java Stream difference between map and mapToObj
+
+The primitive and object versions of data types (i.e. `int` and `Integer`, `double` and `Double`, etc.) are not really compatible with each other in Java. They are made compatible through the extra step of `auto-boxing/unboxing`. Thus, if you have a stream of primitive ints and if you try to use the object versions of `Stream` and `Function` (i.e. `Stream<Integer>` and `Function<Integer, Integer>`), you will incur the cost of boxing and unboxing the elements.
+
+To eliminate this problem, the function package contains primitive specialized versions of streams as well as functional interfaces. For example, instead of using `Stream<Integer>`, you should use `IntStream`. You can now process each element of the stream using `IntFunction`. This will avoid auto-boxing/unboxing altogether.
+
+Thus, whenever you want to process streams of primitive elements, you should use the primitive specialized streams (i.e. `IntStream`, `LongStream`, and `DoubleStream`) and primitive specialized functional interfaces (i.e. `IntFunction`, `IntConsumer`, `IntSupplier`, etc.) to achieve better performance.
+
+One more thing to note is that none of the primitive specialized functional interfaces (such as `IntFunction`, `DoubleFunction`, or `IntConsumer`) extend the non-primitive functional interfaces (i.e. `Function`, `Consumer`, and so on).
+
+`java.util.function` package contains `int`, `double`, and `long` (but no `float`) versions of all the functional interfaces. For example, there is an `IntFunction`, a `DoubleFunction`, and a `LongFunction`, which are `int`, `double`, and `long`, versions of Function. These functions are used along with primitive specialized versions of streams such as `IntStream`, `DoubleStream`, and `LongStream`.
+
+Let's take some examples:
+
+```java
+Stream<Object> stream1 = Stream.of(1, 2, 3); //Will compile fine
+IntStream intStream1 = IntStream.of(4, 5, 6); //Will compile fine
+
+Stream<Object> stream2 = IntStream.of(4, 5, 6); //Does not compile
+Stream<Object> stream3 = IntStream.of(4, 5, 6).mapToObj(e -> e); //mapToObj method is needed
+IntStream intStream2 = Stream.of(4, 5, 6).mapToInt(e -> e); //mapToInt method is needed
+```
